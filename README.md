@@ -17,7 +17,7 @@ Authors: Haonan Chen, Zhicheng Dou, Qiannan Zhu, Xiaochen Zuo, and Ji-rong Wen
 ## Usage
 - Obtain the data (some data samples are provided in the data directory)
   - AOL: Please reach to the author of [CARS](https://arxiv.org/pdf/1906.02329.pdf)
-  - Tiangong-ST: [link](http://www.thuir.cn/tiangong-st/)
+  - Tiangong-ST: [Download here](http://www.thuir.cn/tiangong-st/)
 - Prepare pretrained BERT
   - [BertModel](https://huggingface.co/bert-base-uncased)
   - [BertChinese](https://huggingface.co/bert-base-chinese)  

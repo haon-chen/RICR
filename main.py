@@ -265,7 +265,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', required=True)
 
     parser.add_argument('--use_cuda', type=str2bool, default=True)
-    parser.add_argument('--last_q', type=str2bool, default=False)
+    parser.add_argument('--last_q', type=str2bool, default=False, help="whether to use Tiangong-ST-relevace")
     parser.add_argument('--cuda_id', type=int, default=0)
     parser.add_argument('--save_epochs', type=int, default=-1)
     parser.add_argument('--do_eval', type=str2bool, default=True)

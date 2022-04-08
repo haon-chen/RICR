@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from encoder import Encoder
 from layers import knrm, conv_knrm
 from utils.Constants import PAD
-from reformulator import Reformulator
+from enhancer import Enhancer
 
 def get_non_pad_mask(seq):
     #assert seq.dim() == 2
@@ -42,11 +42,11 @@ class RICR(nn.Module):
 
         self.encoder = Encoder(args)
 
-        # Reformulate current query, candidate document, and supplemental query with session history
+        # Enhance current query, candidate document, and supplemental query with session history
 
-        self.query_reformulation = Reformulator(args.d_word_vec, args.max_query_len, args.d_hid_rnn, dropout=0.1)
-        self.document_reformulation = Reformulator(args.d_word_vec, args.max_doc_len, args.d_hid_rnn, dropout=0.1)
-        self.select_query_reformulation = Reformulator(args.d_word_vec, args.max_query_len, args.d_hid_rnn, dropout=0.1)
+        self.query_enhancement = Enhancer(args.d_word_vec, args.max_query_len, args.d_hid_rnn, dropout=0.1)
+        self.document_enhancement = Enhancer(args.d_word_vec, args.max_doc_len, args.d_hid_rnn, dropout=0.1)
+        self.select_query_enhancement = Enhancer(args.d_word_vec, args.max_query_len, args.d_hid_rnn, dropout=0.1)
 
         self.hidden2output = nn.Linear(args.d_hid_rnn, args.d_word_vec)
 
@@ -94,17 +94,17 @@ class RICR(nn.Module):
 
         history_encoded, hiddens = self.encoder(q_c_embed, history_len, q_h_embed, d_hc_embed)
         
-        reformulated_query_embed, q_hiddens = self.query_reformulation(q_c_embed, hiddens, history_encoded)
-        reformulated_doc_embed, d_hiddens = self.document_reformulation(d_cand_embed, hiddens, history_encoded)
+        enhanced_query_embed, q_hiddens = self.query_enhancement(q_c_embed, hiddens, history_encoded)
+        enhanced_doc_embed, d_hiddens = self.document_enhancement(d_cand_embed, hiddens, history_encoded)
 
-        reformulated_query_embed = reformulated_query_embed.masked_fill(q_c.eq(self.pad_idx).unsqueeze(-1), value=0)
-        reformulated_doc_embed = reformulated_doc_embed.masked_fill(d_cand.eq(self.pad_idx).unsqueeze(-1), value=0)
+        enhanced_query_embed = enhanced_query_embed.masked_fill(q_c.eq(self.pad_idx).unsqueeze(-1), value=0)
+        enhanced_doc_embed = enhanced_doc_embed.masked_fill(d_cand.eq(self.pad_idx).unsqueeze(-1), value=0)
         
         score = self.knrm_layer1(q_c_embed, d_cand_embed, current_query_mask, candidate_mask)
-        query_reformulation_score = self.knrm_layer2(reformulated_query_embed, d_cand_embed, current_query_mask, candidate_mask)
+        query_enhancement_score = self.knrm_layer2(enhanced_query_embed, d_cand_embed, current_query_mask, candidate_mask)
 
-        reformulation_score = self.knrm_layer3(reformulated_query_embed, reformulated_doc_embed, current_query_mask, candidate_mask)
-        doc_generation_score = self.knrm_layer4(q_c_embed, reformulated_doc_embed, current_query_mask, candidate_mask)
+        enhancement_score = self.knrm_layer3(enhanced_query_embed, enhanced_doc_embed, current_query_mask, candidate_mask)
+        doc_generation_score = self.knrm_layer4(q_c_embed, enhanced_doc_embed, current_query_mask, candidate_mask)
         
         # (B, num_cands, num_words, d_emb)
         q_cands_embed_1 = torch.mean(q_cands_embed, dim=2, keepdim=False)
@@ -127,17 +127,17 @@ class RICR(nn.Module):
         selected_query_embed = torch.cat(selected_query_embed, dim=0)
         select_query_mask = get_non_pad_mask(selected_query)
 
-        reformulated_select_query_embed, refor_q_hiddens = self.select_query_reformulation(selected_query_embed, hiddens, history_encoded)
-        reformulated_select_query_embed = reformulated_select_query_embed.masked_fill(selected_query.eq(self.pad_idx).unsqueeze(-1), value=0)
+        enhanced_select_query_embed, refor_q_hiddens = self.select_query_enhancement(selected_query_embed, hiddens, history_encoded)
+        enhanced_select_query_embed = enhanced_select_query_embed.masked_fill(selected_query.eq(self.pad_idx).unsqueeze(-1), value=0)
         
 
         sup_query_score1 = self.knrm_layer5(selected_query_embed, d_cand_embed, select_query_mask, candidate_mask)
-        sup_query_score2 = self.knrm_layer6(selected_query_embed, reformulated_doc_embed, select_query_mask, candidate_mask)
+        sup_query_score2 = self.knrm_layer6(selected_query_embed, enhanced_doc_embed, select_query_mask, candidate_mask)
 
-        refor_sup_query_score1 = self.knrm_layer7(reformulated_select_query_embed, d_cand_embed, select_query_mask, candidate_mask)
-        refor_sup_query_score2 = self.knrm_layer8(reformulated_select_query_embed, reformulated_doc_embed, select_query_mask, candidate_mask)
+        enhan_sup_query_score1 = self.knrm_layer7(enhanced_select_query_embed, d_cand_embed, select_query_mask, candidate_mask)
+        enhan_sup_query_score2 = self.knrm_layer8(enhanced_select_query_embed, enhanced_doc_embed, select_query_mask, candidate_mask)
 
-        scores = torch.stack((score, query_reformulation_score, sup_query_score1, sup_query_score2, refor_sup_query_score1, refor_sup_query_score2, reformulation_score, doc_generation_score), -1)
+        scores = torch.stack((score, query_enhancement_score, sup_query_score1, sup_query_score2, enhan_sup_query_score1, enhan_sup_query_score2, enhancement_score, doc_generation_score), -1)
 
         score = F.tanh(self.ranker(scores)).squeeze(-1)
         

@@ -57,7 +57,7 @@ class Metrics(object):
 
 if __name__ == '__main__':
 
-    metric = Metrics('/output/score_file.txt', segment=50)
+    metric = Metrics('../output/score_file.txt', segment=50)
     result = metric.evaluate_all_metrics()
     for r in result:
         print(r)

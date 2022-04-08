@@ -52,7 +52,7 @@ class Dataset_train(torch.utils.data.Dataset):
         self.sessions = {}
 
         with open(train_file) as f:
-            exm_num = count_file_lines(train_file)/100
+            exm_num = count_file_lines(train_file)
             for line in tqdm(f, total=exm_num, position=0):
                 train_data.append(json.loads(line))
                 if(len(train_data)>=exm_num):
@@ -223,7 +223,7 @@ class Dataset_score(torch.utils.data.Dataset):
         self.sessions = {}
 
         with open(test_file) as f:
-            exm_num = count_file_lines(test_file)/100
+            exm_num = count_file_lines(test_file)
             for line in tqdm(f, total=exm_num, position=0):
                 test_data.append(json.loads(line))
                 if(len(test_data)>=exm_num):

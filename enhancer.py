@@ -2,13 +2,13 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 
-class Reformulator(nn.Module):
+class Enhancer(nn.Module):
     def __init__(self,
                  input_size,
                  num_cells,
                  hidden_size,
                  dropout=0.) -> None:
-        super(Reformulator, self).__init__()
+        super(Enhancer, self).__init__()
         self.num_cells = num_cells
 
         self.rnns = nn.ModuleList()
