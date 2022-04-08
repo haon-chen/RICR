@@ -15,7 +15,7 @@ Authors: Haonan Chen, Zhicheng Dou, Qiannan Zhu, Xiaochen Zuo, and Ji-rong Wen
 - [pytrec-eval](https://pypi.org/project/pytrec-eval/) 0.5  
 
 ## Usage
-- Obtain the data (some data samples are provided in the data directory)
+- Obtain the data
   - AOL: Please reach to the author of [CARS](https://arxiv.org/pdf/1906.02329.pdf)
   - Tiangong-ST: [Download here](http://www.thuir.cn/tiangong-st/)
 - Prepare pretrained BERT
