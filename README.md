@@ -25,15 +25,15 @@ Authors: Haonan Chen, Zhicheng Dou, Qiannan Zhu, Xiaochen Zuo, and Ji-rong Wen
 ## Citations
 If you use the code, please cite the following paper:  
 ```
-@article{10.1145/3529955,
-author = {Chen, Haonan and Dou*, Zhicheng and Zhu, Qiannan and Zuo, Xiaochen and Wen, Ji-Rong},
-title = {Integrating Representation and Interaction for Context-Aware Document Ranking},
-year = {2022},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-issn = {1046-8188},
-url = {https://doi.org/10.1145/3529955},
-doi = {10.1145/3529955},
-journal = {ACM Trans. Inf. Syst.}
+@article{CDZZW2022TOIS,
+    author = {Chen, Haonan and Dou*, Zhicheng and Zhu, Qiannan and Zuo, Xiaochen and Wen, Ji-Rong},
+    title = {Integrating Representation and Interaction for Context-Aware Document Ranking},
+    year = {2022},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    issn = {1046-8188},
+    url = {https://doi.org/10.1145/3529955},
+    doi = {10.1145/3529955},
+    journal = {ACM Trans. Inf. Syst.}
 }
 ```
