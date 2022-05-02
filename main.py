@@ -122,14 +122,15 @@ def evaluate(args, score_loader, model, best_result_trec):
     metric = Metrics(args.score_file_path, segment=segment)
     result_trec = metric.evaluate_all_metrics()
 
-    result_trec = {
-        'map': max(result_trec['map'], best_result_trec['map']),
-        'mrr': max(result_trec['mrr'], best_result_trec['mrr']),
-        'ndcg@1': max(result_trec['ndcg@1'], best_result_trec['ndcg@1']),
-        'ndcg@3': max(result_trec['ndcg@3'], best_result_trec['ndcg@3']),
-        'ndcg@5': max(result_trec['ndcg@5'], best_result_trec['ndcg@5']),
-        'ndcg@10': max(result_trec['ndcg@10'], best_result_trec['ndcg@10']),
-    }
+    if result_trec['map'] + result_trec['mrr'] + result_trec['ndcg@1'] + result_trec['ndcg@3'] + result_trec['ndcg@5'] + result_trec['ndcg@10'] > best_result_trec['map'] + best_result_trec['mrr'] + best_result_trec['ndcg@1'] + best_result_trec['ndcg@3'] + best_result_trec['ndcg@5'] + best_result_trec['ndcg@10']:
+        result_trec = {
+            'map': best_result_trec['map'],
+            'mrr': best_result_trec['mrr'],
+            'ndcg@1': best_result_trec['ndcg@1'],
+            'ndcg@3': best_result_trec['ndcg@3'],
+            'ndcg@5': best_result_trec['ndcg@5'],
+            'ndcg@10': best_result_trec['ndcg@10'],
+        }
 
     re.write('*'*100+"\n")
     re.write('Model {}\n'.format(args.model))

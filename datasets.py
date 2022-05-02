@@ -213,6 +213,7 @@ class Dataset_score(torch.utils.data.Dataset):
             test_file = in_path + "/test_candidate.json"
         if args.dataset == 'tg':
             in_path = args.data_path + '/tiangong'
+            #test_file = in_path + "/dev_candidate.json"
             test_file = in_path + "/test_candidate.json"
         
         test_data = []
