@@ -123,29 +123,29 @@ def evaluate(args, score_loader, model, best_result_trec):
     result_trec = metric.evaluate_all_metrics()
 
     if result_trec['map'] + result_trec['mrr'] + result_trec['ndcg@1'] + result_trec['ndcg@3'] + result_trec['ndcg@5'] + result_trec['ndcg@10'] > best_result_trec['map'] + best_result_trec['mrr'] + best_result_trec['ndcg@1'] + best_result_trec['ndcg@3'] + best_result_trec['ndcg@5'] + best_result_trec['ndcg@10']:
-        result_trec = {
-            'map': best_result_trec['map'],
-            'mrr': best_result_trec['mrr'],
-            'ndcg@1': best_result_trec['ndcg@1'],
-            'ndcg@3': best_result_trec['ndcg@3'],
-            'ndcg@5': best_result_trec['ndcg@5'],
-            'ndcg@10': best_result_trec['ndcg@10'],
+        best_result_trec = {
+            'map': result_trec['map'],
+            'mrr': result_trec['mrr'],
+            'ndcg@1': result_trec['ndcg@1'],
+            'ndcg@3': result_trec['ndcg@3'],
+            'ndcg@5': result_trec['ndcg@5'],
+            'ndcg@10': result_trec['ndcg@10'],
         }
 
     re.write('*'*100+"\n")
     re.write('Model {}\n'.format(args.model))
     re.write('params {}\n'.format(args))
-    re.write('MAP {}\n'.format(result_trec['map']))
-    re.write('MRR {}\n'.format(result_trec['mrr']))
-    re.write('NDCG@1 {}\n'.format(result_trec['ndcg@1']))
-    re.write('NDCG@3 {}\n'.format(result_trec['ndcg@3']))
-    re.write('NDCG@5 {}\n'.format(result_trec['ndcg@5']))
-    re.write('NDCG@10 {}\n'.format(result_trec['ndcg@10']))
+    re.write('MAP {}\n'.format(best_result_trec['map']))
+    re.write('MRR {}\n'.format(best_result_trec['mrr']))
+    re.write('NDCG@1 {}\n'.format(best_result_trec['ndcg@1']))
+    re.write('NDCG@3 {}\n'.format(best_result_trec['ndcg@3']))
+    re.write('NDCG@5 {}\n'.format(best_result_trec['ndcg@5']))
+    re.write('NDCG@10 {}\n'.format(best_result_trec['ndcg@10']))
     re.write('*'*100+"\n")
     re.close()
 
 
-    return result_trec
+    return best_result_trec
 
 
 def main(args):
